@@ -17,8 +17,6 @@ class CreateCartasTable extends Migration
             $table->id();
             $table->char('Nombre',100);
             $table->text('Descripcion');
-            $table->float('Precio',5,2);
-            $table->date('Fecha_Edicion');
             $table->timestamps();
         });
     }

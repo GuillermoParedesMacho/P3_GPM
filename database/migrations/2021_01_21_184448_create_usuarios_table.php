@@ -19,6 +19,7 @@ class CreateUsuariosTable extends Migration
             $table->char('Correo',200)->unique();
             $table->char('Contrasena',100);
             $table->enum('Rol',['Particular','Profesional','Administrador']);
+            $table->rememberToken();
             $table->timestamps();
         });
     }

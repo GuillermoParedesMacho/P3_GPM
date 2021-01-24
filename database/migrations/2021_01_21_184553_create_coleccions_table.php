@@ -17,6 +17,7 @@ class CreateColeccionsTable extends Migration
             $table->id();
             $table->char('Nombre',100);
             $table->longText('Simbolo');//dato almacenado como json de un bitmap;
+            $table->date('Fecha_Edicion');
             $table->timestamps();
         });
     }
