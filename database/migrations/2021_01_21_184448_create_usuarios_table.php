@@ -17,9 +17,9 @@ class CreateUsuariosTable extends Migration
             $table->id();
             $table->char('Nombre',100)->unique();
             $table->char('Correo',200)->unique();
-            $table->char('Contrasena',100);
+            $table->longText('Contrasena');
+            $table->string('api_token', 80)->unique()->nullable()->default(null);
             $table->enum('Rol',['Particular','Profesional','Administrador']);
-            $table->rememberToken();
             $table->timestamps();
         });
     }
