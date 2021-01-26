@@ -20,8 +20,8 @@ class VentasController extends Controller{
 
 		//identificacion del usuario
 		$usuarios = Usuario::where('api_token','=',$datos->api_token)->get();
+		if(count($usuarios) == 0){ return "usuario no encontrado"; }
 		$usuario = $usuarios[0];
-		if(!$usuario){ return "usuario no encontrado"; }
 
 		//verificacin de particular o profesional
 		if($usuario->Rol == 'Administrador'){return "no autorizado"; }
@@ -52,18 +52,40 @@ class VentasController extends Controller{
 		//obtencion y verificacion de datos
 		$datos = $request;
 		if(!$datos){ return "no datos"; }
-		elseif(!$datos->Nombre){ return "no datos -Nombre-"; }
 
-		//Busqueda de las ventas correspondientes
-		$cartas = Carta::where('Nombre','=',$datos->Nombre)->get();
 		$ventas = [];
+		if($datos->Nombre){//Busqueda de las ventas correspondientes por nombre
+			$cartas = Carta::where('Nombre','=',$datos->Nombre)->get();
 
-		foreach($cartas as $carta){
-			$temps = Ventas::where('Carta_ID','=',$carta->id)->get();
+			//filtro de ventas a traves del array de cartas
+			foreach($cartas as $carta){
+				$temps = Ventas::where('Carta_ID','=',$carta->id)->get();
+				foreach($temps as $temp){
+					$userTemp = Usuario::find($temp->Usuario_ID);
+					$ventas[] = [
+						"Nombre_Carta" => $carta->Nombre,
+						"Precio" => $temp->Precio,
+						"Stock" => $temp->Stock,
+						"Usuario_Vendedor" => $userTemp->Nombre
+					];
+				}
+			}
+
+			//ordenando oresultados
+			usort($ventas, function($a, $b){
+				if($a["Precio"] == $b["Precio"]){ return 0; }
+				return ($a["Precio"] < $b["Precio"]) ? -1 : 1;
+			});
+		}
+		else{//Busqueda de las ventas correspondientes sin nombre
+			$temps = Ventas::orderBy('Precio','asc')->get();
+
+			//filtrado de datos
 			foreach($temps as $temp){
 				$userTemp = Usuario::find($temp->Usuario_ID);
+				$cartaTemp = Carta::find($temp->Carta_ID);
 				$ventas[] = [
-					"Nombre_Carta" => $carta->Nombre,
+					"Nombre_Carta" => $cartaTemp->Nombre,
 					"Precio" => $temp->Precio,
 					"Stock" => $temp->Stock,
 					"Usuario_Vendedor" => $userTemp->Nombre
@@ -71,11 +93,6 @@ class VentasController extends Controller{
 			}
 		}
 		
-		//ordenando oresultados
-		usort($ventas, function($a, $b){
-			if($a["Precio"] == $b["Precio"]){ return 0; }
-			return ($a["Precio"] < $b["Precio"]) ? -1 : 1;
-		});
 
 		return response()->json($ventas);
 		

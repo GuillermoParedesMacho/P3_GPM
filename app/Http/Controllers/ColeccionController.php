@@ -17,8 +17,8 @@ class ColeccionController extends Controller{
 
 		//identificacion del usuario
 		$usuarios = Usuario::where('api_token','=',$datos->api_token)->get();
+		if(count($usuarios) == 0){ return "usuario no encontrado"; }
 		$usuario = $usuarios[0];
-		if(!$usuario){ return "usuario no encontrado"; }
 
 		//verificacin de admin
 		if($usuario->Rol != 'Administrador'){return "no autorizado"; }

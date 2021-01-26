@@ -16,7 +16,7 @@ class CreateVentasTable extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('Stock');
-            $table->float('Precio',4,2);
+            $table->float('Precio',8,2);
             $table->unsignedBigInteger('Carta_ID');
             $table->unsignedBigInteger('Usuario_ID');
             $table->timestamps();

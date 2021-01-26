@@ -98,5 +98,4 @@ class UsuariosController extends Controller{
 		}
 		return response()->json($contrasena);
 	}
-
 }

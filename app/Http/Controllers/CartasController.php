@@ -19,8 +19,8 @@ class CartasController extends Controller{
 
 		//identificacion del usuario
 		$usuarios = Usuario::where('api_token','=',$datos->api_token)->get();
+		if(count($usuarios) == 0){ return "usuario no encontrado"; }
 		$usuario = $usuarios[0];
-		if(!$usuario){ return "usuario no encontrado"; }
 
 		//verificacin de admin
 		if($usuario->Rol != 'Administrador'){return "no autorizado"; }
@@ -52,15 +52,19 @@ class CartasController extends Controller{
 
 		//identificacion del usuario
 		$usuarios = Usuario::where('api_token','=',$datos->api_token)->get();
+		if(count($usuarios) == 0){ return "usuario no encontrado"; }
 		$usuario = $usuarios[0];
-		if(!$usuario){ return "usuario no encontrado"; }
 
 		//verificacin de particular o profesional
 		if($usuario->Rol == 'Administrador'){return "no autorizado"; }
 
 		//identificacion de dato de busqueda y filtrado
-		if($datos->Nombre){$cartas = Carta::where('Nombre','=',$datos->Nombre)->get();}
-		else{ return "no parametro busqueda"; }
+		if($datos->Nombre){
+			$cartas = Carta::where('Nombre','=',$datos->Nombre)->get();
+		}
+		else{
+			$cartas = Carta::get();
+		}
 
 		//preparar respuesta
 		$resultado = [];
