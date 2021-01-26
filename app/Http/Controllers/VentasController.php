@@ -71,16 +71,11 @@ class VentasController extends Controller{
 			}
 		}
 		
-		//TODO testear en casa
-		//https://www.php.net/manual/en/function.usort.php
-		//preparado funcion ordenado
-		function cmp($a, $b){
-			if($a->"Precio" == $b->"Precio"){ return 0; }
-			return ($a->"Precio" < $b->"Precio") ? -1 : 1;
-		}
-
 		//ordenando oresultados
-		usort($ventas,"cmp");
+		usort($ventas, function($a, $b){
+			if($a["Precio"] == $b["Precio"]){ return 0; }
+			return ($a["Precio"] < $b["Precio"]) ? -1 : 1;
+		});
 
 		return response()->json($ventas);
 		
