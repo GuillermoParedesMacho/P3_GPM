@@ -71,8 +71,16 @@ class VentasController extends Controller{
 			}
 		}
 		
+		//TODO testear en casa
+		//https://www.php.net/manual/en/function.usort.php
+		//preparado funcion ordenado
+		function cmp($a, $b){
+			if($a->"Precio" == $b->"Precio"){ return 0; }
+			return ($a->"Precio" < $b->"Precio") ? -1 : 1;
+		}
+
 		//ordenando oresultados
-		//$ventas = $ventas::order_By('Precio','asc')->get();
+		usort($ventas,"cmp");
 
 		return response()->json($ventas);
 		
